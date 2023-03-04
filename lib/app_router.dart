@@ -9,14 +9,9 @@ class AppRouter {
     switch (routeSettings.name) {
       case SplashScreenView.TAG:
         return MaterialPageRoute(builder: (_) => const SplashScreenView());
-      case LoginView.TAG:
-        return MaterialPageRoute(builder: (_) => LoginView());
-      case UsersListView.TAG:
-        return MaterialPageRoute(builder: (_) => const UsersListView());
-      case UsersDetailView.TAG:
-        final args = routeSettings.arguments as int;
-
-        return MaterialPageRoute(builder: (_) => UsersDetailView(args));
+      // case UsersDetailView.TAG:
+      //   final args = routeSettings.arguments as int;
+        // return MaterialPageRoute(builder: (_) => UsersDetailView(args));
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreenView());
     }
