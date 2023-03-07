@@ -42,6 +42,9 @@ class LoginView extends StatelessWidget {
         final status = state.status;
         if (status is LoginStatusInitDone) {
           final c = state.status as LoginStatusInitDone;
+          _edUsernameController.text = state.edUsername;
+          _edPasswordController.text = state.edPassword;
+          _edIdController.text = state.edId;
         } else if (status is LoginStatusInfo) {
           final c = state.status as LoginStatusInfo;
           String TITLE = c.title.toString();

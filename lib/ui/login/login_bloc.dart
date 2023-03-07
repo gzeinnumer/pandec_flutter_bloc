@@ -128,6 +128,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield state.copyWith(data: null);
 
       yield state.copyWith(status: const LoginStatusInitDone());
+      yield state.copyWith(status: const LoginStatusOnInput());
     } else if (event is LoginEventEdUsername) {
       yield state.copyWith(edUsername: event.value);
     } else if (event is LoginEventEdPassword) {
