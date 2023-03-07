@@ -124,9 +124,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginEventInit) {
+      //Dummy
       yield state.copyWith(status: const LoginStatusLoading());
       yield state.copyWith(data: null);
-
       yield state.copyWith(status: const LoginStatusInitDone());
       yield state.copyWith(status: const LoginStatusOnInput());
     } else if (event is LoginEventEdUsername) {
@@ -136,20 +136,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else if (event is LoginEventEdId) {
       yield state.copyWith(edId: event.value);
     } else if (event is LoginEventSubmit) {
-      yield state.copyWith(status: const LoginStatusLoading());
-
+      //FOR FORM
       try {
+        yield state.copyWith(status: const LoginStatusLoading());
+
         final res = await repo.getUsersByEmailPass(state.edUsername, state.edPassword, int.parse(state.edId));
-        //FOR FORM
+
         yield state.copyWith(status: const LoginStatusInitDone());
         if (res.status == 1) {
-          yield state.copyWith(data: res.data, status: LoginStatusInfo(MSG_WARNING, "Success", 6));
+          yield state.copyWith(data: res.data);
+          yield state.copyWith(status: LoginStatusInfo(MSG_WARNING, "Success", 6));
         } else {
-          yield state.copyWith(data: null, status: LoginStatusInfo(MSG_WARNING, res.message, 2));
+          yield state.copyWith(data: null);
+          yield state.copyWith(status: LoginStatusInfo(MSG_WARNING, res.message, 2));
         }
         yield state.copyWith(status: const LoginStatusOnInput());
       } on Error catch (e) {
-        yield state.copyWith(status: LoginStatusInfo(MSG_WARNING, e.toString(), 2));
+        yield state.copyWith(status: LoginStatusInfo(MSG_WARNING, (e.toString()), 2));
         yield state.copyWith(status: const LoginStatusOnInput());
       }
     }

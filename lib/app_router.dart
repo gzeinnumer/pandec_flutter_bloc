@@ -23,6 +23,15 @@ class AppRouter {
   }
 }
 
+/*
+Navigator.pushNamed(
+  context,
+  ClaimView.TAG,
+).then((value) {
+  // BlocProvider.of<HomeBloc>(context).add(HomeInitEvent());
+});
+*/
+
 void pushAndRemoveUntil(BuildContext context, String tag, Widget view) {
   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => view), ModalRoute.withName(tag));
 }

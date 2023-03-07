@@ -25,16 +25,16 @@ class UsersListStatusInit extends UsersListStatus {
   const UsersListStatusInit();
 }
 
+class UsersListStatusLoading extends UsersListStatus {
+  const UsersListStatusLoading();
+}
+
 class UsersListStatusInitDone extends UsersListStatus {
   const UsersListStatusInitDone();
 }
 
 class UsersListStatusOnInput extends UsersListStatus {
   const UsersListStatusOnInput();
-}
-
-class UsersListStatusLoading extends UsersListStatus {
-  const UsersListStatusLoading();
 }
 
 class UsersListStatusInfo extends UsersListStatus {
@@ -47,6 +47,7 @@ class UsersListStatusInfo extends UsersListStatus {
   //type 3 = info->back
   //type 4 = confirm
   //type 5 = snackbar
+  //type 6 = action
 
   String? get title => _title;
 
@@ -60,6 +61,7 @@ class UsersListStatusInfo extends UsersListStatus {
 //STATE-------------------------------------------------------------------------
 class UsersListState {
   final String ed;
+
   String? get isValidEd => ed.toString().isNotEmpty ? null : "required";
 
   List<DataUsers>? data;
@@ -96,26 +98,28 @@ class UsersListBloc extends Bloc<UsersListEvent, UsersListState> {
   @override
   Stream<UsersListState> mapEventToState(UsersListEvent event) async* {
     if (event is UsersListEventInit) {
-      yield state.copyWith(status: const UsersListStatusLoading());
-
+      //FOR LIST
       try {
+        yield state.copyWith(status: const UsersListStatusLoading());
+
         final res = await repo.getUsers();
 
         yield state.copyWith(status: const UsersListStatusInitDone());
-        // yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, res.message, 2));
-        // print("data_"+res.data!.length.toString());
-        //
         if (res.status == 1) {
-         yield state.copyWith(data: res.data);
+          yield state.copyWith(data: res.data);
+          yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, "Success", 2));
         } else {
-         yield state.copyWith(data: [], status: UsersListStatusInfo(MSG_WARNING, res.message, 2));
+          yield state.copyWith(data: []);
+          yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, res.message, 2));
         }
         yield state.copyWith(status: const UsersListStatusOnInput());
-
       } on Error catch (e) {
         yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, e.toString(), 2));
         yield state.copyWith(status: const UsersListStatusOnInput());
       }
+    } else if (event is UsersListEventEd) {
+      yield state.copyWith(ed: event.value);
+    } else if (event is UsersListEventSubmit) {
     }
   }
 }

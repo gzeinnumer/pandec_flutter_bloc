@@ -85,7 +85,9 @@ class UsersListView extends StatelessWidget {
                             context,
                             UsersDetailView.TAG,
                             arguments: state.data![index].id,
-                          );
+                          ).then((value) {
+                            BlocProvider.of<UsersListBloc>(context).add(UsersListEventInit());
+                          });
                         },
                         child: Container(
                           padding: const EdgeInsets.all(16),
