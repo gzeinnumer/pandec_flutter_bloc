@@ -15,7 +15,6 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const UsersListView());
       case UsersDetailView.TAG:
         final args = routeSettings.arguments as int;
-
         return MaterialPageRoute(builder: (_) => UsersDetailView(args));
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreenView());
