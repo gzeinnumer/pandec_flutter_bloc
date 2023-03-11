@@ -106,11 +106,15 @@ class UsersListBloc extends Bloc<UsersListEvent, UsersListState> {
 
         yield state.copyWith(status: const UsersListStatusInitDone());
         if (res.status == 1) {
-          yield state.copyWith(data: res.data);
-          yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, "Success", 2));
+          yield state.copyWith(
+            data: res.data,
+            status: UsersListStatusInfo(MSG_WARNING, "Success", 2),
+          );
         } else {
-          yield state.copyWith(data: []);
-          yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, res.message, 2));
+          yield state.copyWith(
+            data: [],
+            status: UsersListStatusInfo(MSG_WARNING, res.message, 2),
+          );
         }
         yield state.copyWith(status: const UsersListStatusOnInput());
       } on Error catch (e) {
@@ -119,7 +123,6 @@ class UsersListBloc extends Bloc<UsersListEvent, UsersListState> {
       }
     } else if (event is UsersListEventEd) {
       yield state.copyWith(ed: event.value);
-    } else if (event is UsersListEventSubmit) {
-    }
+    } else if (event is UsersListEventSubmit) {}
   }
 }

@@ -100,7 +100,6 @@ class UsersDetailBloc extends Bloc<UsersDetailEvent, UsersDetailState> {
   @override
   Stream<UsersDetailState> mapEventToState(UsersDetailEvent event) async* {
     if (event is UsersDetailEventInit) {
-
       //FOR DETAIL
       try {
         yield state.copyWith(status: const UsersDetailStatusLoading());
@@ -109,11 +108,15 @@ class UsersDetailBloc extends Bloc<UsersDetailEvent, UsersDetailState> {
 
         yield state.copyWith(status: const UsersDetailStatusInitDone());
         if (res.status == 1) {
-          yield state.copyWith(data: res.data);
-          yield state.copyWith(status: UsersDetailStatusInfo(MSG_WARNING, "Success", 2));
+          yield state.copyWith(
+            data: res.data,
+            status: UsersDetailStatusInfo(MSG_WARNING, "Success", 2),
+          );
         } else {
-          yield state.copyWith(data: null);
-          yield state.copyWith(status: UsersDetailStatusInfo(MSG_WARNING, res.message, 2));
+          yield state.copyWith(
+            data: null,
+            status: UsersDetailStatusInfo(MSG_WARNING, res.message, 2),
+          );
         }
         yield state.copyWith(status: const UsersDetailStatusOnInput());
       } on Error catch (e) {
@@ -122,7 +125,6 @@ class UsersDetailBloc extends Bloc<UsersDetailEvent, UsersDetailState> {
       }
     } else if (event is UsersDetailEventEd) {
       yield state.copyWith(ed: event.value);
-    } else if (event is UsersDetailEventSubmit) {
-    }
+    } else if (event is UsersDetailEventSubmit) {}
   }
 }
