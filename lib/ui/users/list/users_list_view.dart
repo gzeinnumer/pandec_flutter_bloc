@@ -8,7 +8,7 @@ import 'package:pandec_flutter_bloc/ui/users/users_repo.dart';
 class UsersListView extends StatelessWidget {
   static const String TAG = "UsersListView";
 
-  const UsersListView({Key? key}) : super(key: key);
+  UsersListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +74,10 @@ class UsersListView extends StatelessWidget {
       child: Column(
         children: [
           // Text('${state.data!.length}'),
+          edSearch(context, state),
           Expanded(
-            child: state.data!.isEmpty
+            // child: state.data!.isEmpty
+            child: state.dataFilter!.isEmpty
                 ? const NoData()
                 : ListView.builder(
                     itemBuilder: (context, index) {
@@ -84,7 +86,8 @@ class UsersListView extends StatelessWidget {
                           Navigator.pushNamed(
                             context,
                             UsersDetailView.TAG,
-                            arguments: state.data![index].id,
+                            // arguments: state.data![index].id,
+                            arguments: state.dataFilter![index].id,
                           ).then((value) {
                             BlocProvider.of<UsersListBloc>(context).add(UsersListEventInit());
                           });
@@ -96,14 +99,30 @@ class UsersListView extends StatelessWidget {
                             color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(16.0)),
                           ),
-                          child: Text(state.data![index].toJsonCustom()),
+                          // child: Text(state.data![index].toJsonCustom()),
+                          child: Text(state.dataFilter![index].toJsonCustom()),
                         ),
                       );
                     },
-                    itemCount: state.data!.length,
+                    // itemCount: state.data!.length,
+                    itemCount: state.dataFilter!.length,
                   ),
           ),
         ],
+      ),
+    );
+  }
+
+  final _edSearch = TextEditingController();
+
+  Widget edSearch(BuildContext context, UsersListState state) {
+    return TextFormField(
+      controller: _edSearch,
+      // validator: (value) => state.isValidEdSearch,
+      onChanged: (value) => context.read<UsersListBloc>().add(UsersListEventEdSearch(value)),
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'Username',
       ),
     );
   }

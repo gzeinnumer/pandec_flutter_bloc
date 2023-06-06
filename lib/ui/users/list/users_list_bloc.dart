@@ -8,10 +8,11 @@ abstract class UsersListEvent {}
 
 class UsersListEventInit extends UsersListEvent {}
 
-class UsersListEventEd extends UsersListEvent {
+//Custom Edit
+class UsersListEventEdSearch extends UsersListEvent {
   final String value;
 
-  UsersListEventEd(this.value);
+  UsersListEventEdSearch(this.value);
 }
 
 class UsersListEventSubmit extends UsersListEvent {}
@@ -60,28 +61,32 @@ class UsersListStatusInfo extends UsersListStatus {
 
 //STATE-------------------------------------------------------------------------
 class UsersListState {
-  final String ed;
+  final String edSearch;
 
-  String? get isValidEd => ed.toString().isNotEmpty ? null : "required";
+  String? get isValidEdSearch => edSearch.toString().isNotEmpty ? null : "required";
 
   List<DataUsers>? data;
+  List<DataUsers>? dataFilter;
 
   final UsersListStatus status;
 
   UsersListState({
-    this.ed = "",
+    this.edSearch = "",
     this.data = const [],
+    this.dataFilter = const [],
     this.status = const UsersListStatusInit(),
   });
 
   UsersListState copyWith({
-    String? ed,
+    String? edSearch,
     List<DataUsers>? data,
+    List<DataUsers>? dataFilter,
     UsersListStatus? status,
   }) {
     return UsersListState(
-      ed: ed ?? this.ed,
+      edSearch: edSearch ?? this.edSearch,
       data: data ?? this.data,
+      dataFilter: dataFilter ?? this.dataFilter,
       status: status ?? this.status,
     );
   }
@@ -103,16 +108,18 @@ class UsersListBloc extends Bloc<UsersListEvent, UsersListState> {
         yield state.copyWith(status: const UsersListStatusLoading());
 
         final res = await repo.getUsers();
-
+        //
         yield state.copyWith(status: const UsersListStatusInitDone());
         if (res.status == 1) {
           yield state.copyWith(
             data: res.data,
-            status: UsersListStatusInfo(MSG_WARNING, "Success", 2),
+            dataFilter: res.data,
+            status: UsersListStatusInfo(MSG_WARNING, "Success Get Data", 2),
           );
         } else {
           yield state.copyWith(
             data: [],
+            dataFilter: [],
             status: UsersListStatusInfo(MSG_WARNING, res.message, 2),
           );
         }
@@ -121,8 +128,36 @@ class UsersListBloc extends Bloc<UsersListEvent, UsersListState> {
         yield state.copyWith(status: UsersListStatusInfo(MSG_WARNING, e.toString(), 2));
         yield state.copyWith(status: const UsersListStatusOnInput());
       }
-    } else if (event is UsersListEventEd) {
-      yield state.copyWith(ed: event.value);
+    } else if (event is UsersListEventEdSearch) {
+      yield state.copyWith(edSearch: event.value);
+
+      // print("zein_${state.data!.length}");
+      // print("zein_${state.dataFilter!.length}");
+      List<DataUsers>? realData = state.data!.map((v) => v).toList();
+      List<DataUsers>? res = [];
+      if (realData.isNotEmpty) {
+        for (var i = 0; i < realData.length; i++) {
+          if (realData[i].name!.contains(event.value)) {
+            // print("zein_"+realData[i].name.toString());
+            // print("zein_"+event.value);
+            res.add(realData[i]);
+          }
+        }
+      }
+
+      if (event.value.isNotEmpty) {
+        // print("zein_1_${res.length}");
+        yield state.copyWith(
+          dataFilter: res,
+        );
+      } else {
+        // print("zein_2_${res.length}");
+        yield state.copyWith(
+          dataFilter: realData,
+        );
+      }
+      yield state.copyWith(status: const UsersListStatusInitDone());
+      yield state.copyWith(status: const UsersListStatusOnInput());
     } else if (event is UsersListEventSubmit) {}
   }
 }

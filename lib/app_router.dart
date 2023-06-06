@@ -12,7 +12,7 @@ class AppRouter {
       case LoginView.TAG:
         return MaterialPageRoute(builder: (_) => LoginView());
       case UsersListView.TAG:
-        return MaterialPageRoute(builder: (_) => const UsersListView());
+        return MaterialPageRoute(builder: (_) => UsersListView());
       case UsersDetailView.TAG:
         final args = routeSettings.arguments as int;
         return MaterialPageRoute(builder: (_) => UsersDetailView(args));

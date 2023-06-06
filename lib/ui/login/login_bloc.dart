@@ -148,7 +148,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (res.status == 1) {
           yield state.copyWith(
             data: res.data,
-            status: LoginStatusInfo(MSG_WARNING, "Success", 6),
+            status: LoginStatusInfo(MSG_WARNING, "Success Login", 6),
           );
         } else {
           yield state.copyWith(
