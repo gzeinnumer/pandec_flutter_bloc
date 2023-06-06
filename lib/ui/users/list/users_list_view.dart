@@ -116,13 +116,18 @@ class UsersListView extends StatelessWidget {
   final _edSearch = TextEditingController();
 
   Widget edSearch(BuildContext context, UsersListState state) {
-    return TextFormField(
-      controller: _edSearch,
-      // validator: (value) => state.isValidEdSearch,
-      onChanged: (value) => context.read<UsersListBloc>().add(UsersListEventEdSearch(value)),
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        hintText: 'Username',
+    return Container(
+      margin: EdgeInsets.all(6),
+      child: TextFormField(
+        controller: _edSearch,
+        // validator: (value) => state.isValidEdSearch,
+        onChanged: (value) => context.read<UsersListBloc>().add(UsersListEventEdSearch(value)),
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          hintText: 'Username',
+          filled: true, //<-- SEE HERE
+          fillColor: Colors.white, //<-- SEE HERE
+        ),
       ),
     );
   }
